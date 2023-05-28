@@ -12,7 +12,11 @@ from .models import (Coords,
 class CoordsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coords
-        fields = '__all__'
+        fields = [
+            'height',
+            'longitude',
+            'latitude',
+        ]
 
 
 class LevelSerializer(serializers.ModelSerializer):
@@ -23,13 +27,21 @@ class LevelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Level
-        fields = '__all__'
+        fields = [
+            'winter',
+            'spring',
+            'summer',
+            'autumn',
+        ]
 
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = '__all__'
+        fields = [
+            'title',
+            'image',
+        ]
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
