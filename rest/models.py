@@ -1,43 +1,24 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, UserManager, User
+from django.contrib.auth.models import AbstractUser
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils import timezone
 
 
-class CustomUser(AbstractBaseUser):
-    username_validator = UnicodeUsernameValidator()
-
+class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=64, 
                                   default='Имя')
     last_name = models.CharField(max_length=64, 
                                  default='Фамилия')
     patronymic = models.CharField(max_length=64, 
                                   default='Отчество')
-    username = models.CharField(max_length=64, 
-                                unique=True, 
-                                default='username', 
-                                validators=[username_validator],
-                                error_messages={
-                                    "unique": '"A user with that username already exists."'
-                                })
-    phone = models.IntegerField(null=False, 
+    phone = models.BigIntegerField(null=False, 
                                 default='9999999999')
     email = models.EmailField(max_length=64, 
                               unique=True, 
                               default='example@mail.ru', 
                               null=False)
-    password = models.CharField(default='password', 
-                                null=False)
-    is_superuser = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(default=timezone.now)
-
-    objects = UserManager()
-
-    USERNAME_FIELD = 'username'
 
     
 class PerevalAdded(models.Model):

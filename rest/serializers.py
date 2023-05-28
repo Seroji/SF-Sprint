@@ -26,7 +26,7 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CustomUserSerizlier(serializers.ModelSerializer):
+class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = [
@@ -42,7 +42,7 @@ class PerevalSerializer(serializers.ModelSerializer):
     coords = CoordsSerializer(many=False)
     level = LevelSerializer(many=False)
     images = ImageSerializer(many=True)
-    user = CustomUserSerizlier(many=False)
+    user = CustomUserSerializer(many=False)
 
     class Meta:
         model = PerevalAdded
@@ -57,4 +57,35 @@ class PerevalSerializer(serializers.ModelSerializer):
             'level',
             'images',
         ]
+
+    def create(self, validated_data):
+        first_name = validated_data.pop('first_name')
+        last_name = validated_data.pop('last_name')
+        patronymic = validated_data.pop('patronymic')
+        CustomUser.objects.create(
+            fisrt_name=first_name,
+            last_name=last_name,
+            patronymic=patronymic,
+            email=validated_data.pop('email'),
+            phone=validated_data.pop('phone'),
+        )
+        Coords.objects.create(
+            height=validated_data.pop('height'),
+            logitude=validated_data.pop('logitude'),
+            latitude=validated_data.pop('latitude'),
+        )
+        for image in validated_data.pop('images'):
+            Image.objects.create(
+                title=image.pop('title'),
+                image=image.pop('data')
+            )
+        level = validated_data.pop('level')
+        Level.objects.create(
+            winter=level.pop('winter'),
+            spring=level.pop('spring'),
+            summer=level.pop('summer'),
+            autumn=level.pop('autumn'),
+        )
+        pereval = PerevalAdded.objects.create(**validated_data)
+        return pereval
 
