@@ -29,6 +29,7 @@ class PerevalAdded(models.Model):
                                     default='Другие названия')
     add_time = models.DateTimeField(auto_now_add=True)
     connect = models.ForeignKey('Connect',
+                                default=1,
                                 on_delete=models.CASCADE)
     status = models.ForeignKey('Status',
                                default=1,
