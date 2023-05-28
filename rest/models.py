@@ -50,9 +50,9 @@ class Status(models.Model):
     
     
 class Coords(models.Model):
-    height = models.IntegerField()
-    logitude = models.FloatField()
-    latitude = models.FloatField()
+    height = models.IntegerField(null=False)
+    logitude = models.FloatField(null=False)
+    latitude = models.FloatField(null=False)
 
 
 class Level(models.Model):
