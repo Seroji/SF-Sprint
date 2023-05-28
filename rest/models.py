@@ -57,15 +57,15 @@ class Status(models.Model):
     
 class Coords(models.Model):
     height = models.IntegerField(null=False)
-    logitude = models.FloatField(null=False)
+    longitude = models.FloatField(null=False)
     latitude = models.FloatField(null=False)
 
 
 class Level(models.Model):
-    winter = models.CharField(max_length=4)
-    spring = models.CharField(max_length=4)
-    summer = models.CharField(max_length=4)
-    autumn = models.CharField(max_length=4)
+    winter = models.CharField(max_length=4, default="", blank=False)
+    spring = models.CharField(max_length=4, default="", blank=False)
+    summer = models.CharField(max_length=4, default="", blank=False)
+    autumn = models.CharField(max_length=4, default="", blank=False)
 
 class Image(models.Model):
     title = models.CharField(max_length=64)

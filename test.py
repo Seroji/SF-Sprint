@@ -1,5 +1,8 @@
-info = 'Иванов Иван Иванович'
-f, l, o = info.split(" ")
-print(f)
-print(l)
-print(o)
+{
+    'user': [ErrorDetail(string='Обязательное поле.', code='required')], 
+    'coords': [ErrorDetail(string='Обязательное поле.', code='required')], 
+    'level': {
+            'spring': [ErrorDetail(string='Это поле не может быть пустым.', code='blank')], 
+            'summer': [ErrorDetail(string='Это поле не может быть пустым.', code='blank')]
+            },
+}

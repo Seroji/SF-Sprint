@@ -19,14 +19,14 @@ class submitData(views.APIView):
                     value=
                     {
                         "height": "1200",
-                        "logitude": "48.068",
+                        "longitude": "48.068",
                         "latitude": "120.087",
                         "title": "пер.",
                         "beauty_title": "Пхия",
                         "other_titles": "Триев",
                         "images": [
-                            {"data":"<img1>", "title":"Седловина"}, 
-                            {"data":"<img2>", "title":"Подъём"}
+                            {"image":"<img1>", "title":"Седловина"}, 
+                            {"image":"<img2>", "title":"Подъём"}
                             ],
                         "user_info": "Иванов Иван Иванович",
                         "email": "example@mail.ru",
@@ -46,14 +46,30 @@ class submitData(views.APIView):
         last_name, first_name, patronymic = name.split(" ")
         data = request.data
         data.pop('user_info')
-        data['first_name'] = first_name
-        data['last_name'] = last_name
-        data['patronymic'] = patronymic
+        user = {'user': 
+                {
+            "email": request.data.get('email'),
+            "last_name": last_name,
+            "first_name": first_name,
+            "patronymic": patronymic,
+            "phone": request.data.get('phone'),
+                }
+        }
+        height = request.data.pop('height')
+        latitude = request.data.pop('latitude')
+        longitude = request.data.pop('longitude')
+        coords = {
+            'height': height,
+            "latitude": latitude,
+            "longitude": longitude,
+        }
+        data['coords'] = coords
+        data['user'] = user
         serializer = PerevalSerializer(data=data)
-        print(serializer)
         if serializer.is_valid():
             serializer.save()
             return Response('Success!')
+        print(serializer.errors)
         return Response(serializer.data)
 
 

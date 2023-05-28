@@ -15,6 +15,11 @@ class CoordsSerializer(serializers.ModelSerializer):
 
 
 class LevelSerializer(serializers.ModelSerializer):
+    winter = serializers.CharField(required=False, default="", allow_blank=True)
+    spring = serializers.CharField(required=False, default="", allow_blank=True)
+    summer = serializers.CharField(required=False, default="", allow_blank=True)
+    autumn = serializers.CharField(required=False, default="", allow_blank=True)
+
     class Meta:
         model = Level
         fields = '__all__'
