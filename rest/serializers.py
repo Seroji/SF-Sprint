@@ -1,8 +1,6 @@
 from rest_framework import serializers
 from rest_framework.fields import CurrentUserDefault
 
-from django.contrib.auth.models import User
-
 from .models import (Coords,
                      Level,
                      Image,
@@ -28,25 +26,15 @@ class ImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class DefaultUserSerizlier(serializers.ModelSerializer):
+class CustomUserSerizlier(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = CustomUser
         fields = [
             'email',
             'last_name',
             'first_name',
-        ]
-
-
-class CustomUserSerizlier(serializers.ModelSerializer):
-    user = DefaultUserSerizlier(many=False)
-    
-    class Meta:
-        model = CustomUser
-        fields = [
-            'user',
-            'phone',
-            'otc',
+            'patronymic',
+            'phone'
         ]
 
 
