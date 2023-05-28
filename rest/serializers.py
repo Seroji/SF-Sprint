@@ -21,17 +21,26 @@ class LevelSerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
-        models = Image
+        model = Image
         fields = '__all__'
 
 
-class PerevalSerializers(serializers.ModelSerializer):
+class PerevalSerializer(serializers.ModelSerializer):
     coords = CoordsSerializer(many=True)
     level = LevelSerializer(many=True)
     images = ImageSerializer(many=True)
 
     class Meta:
         model = PerevalAdded
-        fields = '__all__'
+        fields = [
+            'beauty_title',
+            'title',
+            'other_titles',
+            'connect',
+            'add_time',
+            'user',
+            'coords',
+            'level',
+            'images',
+        ]
 
-    # def create(self, validated_data):

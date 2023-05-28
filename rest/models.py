@@ -17,7 +17,7 @@ class CustomUser(models.Model):
 
 
 class PerevalAdded(models.Model):
-    author = models.ForeignKey(CustomUser,
+    user = models.ForeignKey(CustomUser,
                                on_delete=models.CASCADE)
     beauty_title = models.CharField(max_length=64, 
                                     default='пер.')
