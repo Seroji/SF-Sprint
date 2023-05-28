@@ -1,22 +1,22 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser, User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
 
-class CustomUser(models.Model):
-    user = models.OneToOneField(User,
-                                on_delete=models.CASCADE)
-    otc = models.CharField(max_length=64, default='Отчество')
-    phone = models.IntegerField(null=False, default=9999999999)
+class CustomUser(AbstractBaseUser):
+    first_name = models.CharField(max_length=64, default='Имя')
+    last_name = models.CharField(max_length=64, default='Фамилия')
+    patronymic = models.CharField(max_length=64, default='Отчество')
+    username = models.CharField(max_length=64, unique=True, default='username')
+    phone = models.IntegerField(null=False, default='9999999999')
+    email = models.EmailField(max_length=64, unique=True, default='example@mail.ru')
+    password = models.CharField(default='password', null=False)
+    is_superuser = models.BooleanField(default=False)
 
-    @receiver(signal=post_save, sender=User)
-    def create_user_author(sender, instance, created, **kwargs):
-        if created:
-            obj = CustomUser.objects.create(user=instance)
-            obj.save()
+    USERNAME_FIELD = 'username'
 
-
+    
 class PerevalAdded(models.Model):
     user = models.ForeignKey(CustomUser,
                                on_delete=models.CASCADE)

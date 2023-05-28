@@ -39,11 +39,14 @@ class DefaultUserSerizlier(serializers.ModelSerializer):
 
 
 class CustomUserSerizlier(serializers.ModelSerializer):
+    user = DefaultUserSerizlier(many=False)
+    
     class Meta:
         model = CustomUser
         fields = [
+            'user',
             'phone',
-
+            'otc',
         ]
 
 
@@ -51,6 +54,7 @@ class PerevalSerializer(serializers.ModelSerializer):
     coords = CoordsSerializer(many=False)
     level = LevelSerializer(many=False)
     images = ImageSerializer(many=True)
+    user = CustomUserSerizlier(many=False)
 
     class Meta:
         model = PerevalAdded
