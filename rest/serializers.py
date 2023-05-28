@@ -5,7 +5,8 @@ from .models import (Coords,
                      Level,
                      Image,
                      PerevalAdded,
-                     CustomUser)
+                     CustomUser,
+                     PerevalImage)
 
 
 class CoordsSerializer(serializers.ModelSerializer):
@@ -64,33 +65,51 @@ class PerevalSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        first_name = validated_data.pop('first_name')
-        last_name = validated_data.pop('last_name')
-        patronymic = validated_data.pop('patronymic')
-        CustomUser.objects.create(
-            fisrt_name=first_name,
-            last_name=last_name,
-            patronymic=patronymic,
-            email=validated_data.pop('email'),
-            phone=validated_data.pop('phone'),
-        )
-        Coords.objects.create(
-            height=validated_data.pop('height'),
-            logitude=validated_data.pop('logitude'),
-            latitude=validated_data.pop('latitude'),
-        )
-        for image in validated_data.pop('images'):
-            Image.objects.create(
-                title=image.pop('title'),
-                image=image.pop('data')
+        user = validated_data.pop('user')
+        if not CustomUser.objects.filter(email=user.get('email')).exists():
+            user_instance = CustomUser.objects.create(
+                first_name=user.pop('first_name'),
+                last_name=user.pop('last_name'),
+                patronymic=user.pop('patronymic'),
+                email=user.pop('email'),
+                phone=user.pop('phone'),
             )
+            user_instance.save()
+        coords = validated_data.pop('coords')
+        if not Coords.objects.filter(height=coords.get('height'), 
+                                     longitude=coords.get('longitude'), 
+                                     latitude=coords.get('latitude')).exists():
+            coords_instance = Coords.objects.create(
+                height=coords.pop('height'),
+                longitude=coords.pop('longitude'),
+                latitude=coords.pop('latitude'),
+            )
+            coords_instance.save()
+        images = []
+        for image in validated_data.pop('images'):
+            image = Image.objects.create(
+                title=image.pop('title'),
+                image=image.pop('image')
+            )
+            image.save()
+            images.append(image)
         level = validated_data.pop('level')
-        Level.objects.create(
+        level_instance = Level.objects.create(
             winter=level.pop('winter'),
             spring=level.pop('spring'),
             summer=level.pop('summer'),
             autumn=level.pop('autumn'),
         )
-        pereval = PerevalAdded.objects.create(**validated_data)
+        level_instance.save()
+        pereval = PerevalAdded.objects.create(
+            beauty_title = validated_data.pop('beauty_title'),
+            title=validated_data.pop('title'),
+            other_titles=validated_data.pop('other_titles'),
+            user_id=user_instance.id,
+            coords_id=coords_instance.id,
+            level_id=level_instance.id,
+        )
+        pereval.save()
+        for image in images:
+            PerevalImage.objects.create(pereval_id=pereval.id, image_id=image.id)
         return pereval
-

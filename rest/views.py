@@ -5,6 +5,8 @@ from rest_framework.parsers import JSONParser
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
 
+from django.http import JsonResponse
+
 from .models import PerevalAdded
 from .serializers import PerevalSerializer
 
@@ -46,14 +48,12 @@ class submitData(views.APIView):
         last_name, first_name, patronymic = name.split(" ")
         data = request.data
         data.pop('user_info')
-        user = {'user': 
-                {
+        user = {
             "email": request.data.get('email'),
             "last_name": last_name,
             "first_name": first_name,
             "patronymic": patronymic,
             "phone": request.data.get('phone'),
-                }
         }
         height = request.data.pop('height')
         latitude = request.data.pop('latitude')
@@ -62,13 +62,16 @@ class submitData(views.APIView):
             'height': height,
             "latitude": latitude,
             "longitude": longitude,
+            "email": request.data.pop('email'),
+            "phone": request.data.pop('phone'),
         }
         data['coords'] = coords
         data['user'] = user
         serializer = PerevalSerializer(data=data)
         if serializer.is_valid():
+            print(serializer.errors)
             serializer.save()
-            return Response('Success!')
+            return JsonResponse(serializer.data, status=200)
         print(serializer.errors)
         return Response(serializer.data)
 
