@@ -7,6 +7,7 @@ from django.db.models.signals import post_save
 class CustomUser(models.Model):
     user = models.OneToOneField(User,
                                 on_delete=models.CASCADE)
+    otc = models.CharField(max_length=64, default='Отчество')
     phone = models.IntegerField(null=False, default=9999999999)
 
     @receiver(signal=post_save, sender=User)
