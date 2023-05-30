@@ -35,10 +35,8 @@ class PerevalAdded(models.Model):
     other_titles = models.CharField(max_length=128, 
                                     null=False, 
                                     default='Другие названия')
-    add_time = models.DateTimeField(auto_now_add=True)
-    connect = models.ForeignKey('Connect',
-                                default=1,
-                                on_delete=models.CASCADE)
+    add_time = models.DateTimeField()
+    connect = models.CharField(null=True)
     status = models.ForeignKey('Status',
                                default=1,
                                on_delete=models.CASCADE)
@@ -48,10 +46,6 @@ class PerevalAdded(models.Model):
                               on_delete=models.CASCADE)
     images = models.ManyToManyField("Image",
                                     through='PerevalImage')
-    
-
-class Connect(models.Model):
-    title = models.CharField(max_length=64)
 
 
 class Status(models.Model):
@@ -64,11 +58,16 @@ class Coords(models.Model):
     latitude = models.FloatField(null=False)
 
 
+LEVEL_CHOICES = [
+    ''
+]
+
+
 class Level(models.Model):
-    winter = models.CharField(max_length=4, default="", blank=False)
-    spring = models.CharField(max_length=4, default="", blank=False)
-    summer = models.CharField(max_length=4, default="", blank=False)
-    autumn = models.CharField(max_length=4, default="", blank=False)
+    winter = models.CharField(max_length=2, default="", blank=False)
+    spring = models.CharField(max_length=2, default="", blank=False)
+    summer = models.CharField(max_length=2, default="", blank=False)
+    autumn = models.CharField(max_length=2, default="", blank=False)
 
 class Image(models.Model):
     title = models.CharField(max_length=64)

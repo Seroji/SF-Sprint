@@ -45,8 +45,8 @@ class submitData(views.APIView):
                             "spring": ""
                             },
                         "images": [
-                            {"data":"<картинка1>", "title":"Седловина"}, 
-                            {"data":"<картинка>", "title":"Подъём"}
+                            {"image":"<картинка1>", "title":"Седловина"}, 
+                            {"image":"<картинка>", "title":"Подъём"}
                             ]
                     }
                 )
