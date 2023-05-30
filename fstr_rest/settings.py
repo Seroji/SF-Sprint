@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django_filters",
     "drf_spectacular",
     "drf_spectacular_sidecar",
+    "phonenumber_field",
 ]
 
 MIDDLEWARE = [
@@ -143,6 +144,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'EXCEPTION_HANDLER': 'rest.utils.custom_exception_handler'
 }
 
 SPECTACULAR_SETTINGS = {

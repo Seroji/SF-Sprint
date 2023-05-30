@@ -87,6 +87,7 @@ class PerevalSerializer(serializers.ModelSerializer):
                 phone=user.pop('phone'),
             )
             user_instance.save()
+
         coords = validated_data.pop('coords')
         if not Coords.objects.filter(height=coords.get('height'), 
                                      longitude=coords.get('longitude'), 
@@ -97,6 +98,7 @@ class PerevalSerializer(serializers.ModelSerializer):
                 latitude=coords.pop('latitude'),
             )
             coords_instance.save()
+
         images = []
         for image in validated_data.pop('images'):
             image = Image.objects.create(
@@ -105,6 +107,7 @@ class PerevalSerializer(serializers.ModelSerializer):
             )
             image.save()
             images.append(image)
+        
         level = validated_data.pop('level')
         level_instance = Level.objects.create(
             winter=level.pop('winter'),
@@ -113,6 +116,7 @@ class PerevalSerializer(serializers.ModelSerializer):
             autumn=level.pop('autumn'),
         )
         level_instance.save()
+
         pereval = PerevalAdded.objects.create(
             beauty_title = validated_data.pop('beauty_title'),
             title=validated_data.pop('title'),
@@ -122,6 +126,7 @@ class PerevalSerializer(serializers.ModelSerializer):
             level_id=level_instance.id,
         )
         pereval.save()
+        
         for image in images:
             PerevalImage.objects.create(pereval_id=pereval.id, image_id=image.id)
         return pereval

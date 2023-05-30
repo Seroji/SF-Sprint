@@ -5,6 +5,8 @@ from django.db.models.signals import post_save
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils import timezone
 
+from phonenumber_field.modelfields import PhoneNumberField
+
 
 class CustomUser(AbstractBaseUser):
     first_name = models.CharField(max_length=64, 
@@ -13,8 +15,7 @@ class CustomUser(AbstractBaseUser):
                                  default='Фамилия')
     patronymic = models.CharField(max_length=64, 
                                   default='Отчество')
-    phone = models.BigIntegerField(null=False, 
-                                default='9999999999')
+    phone = PhoneNumberField(region='RU', null=False)
     email = models.EmailField(max_length=64, 
                               unique=True, 
                               default='example@mail.ru', 
