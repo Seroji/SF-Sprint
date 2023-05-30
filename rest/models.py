@@ -1,12 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.utils import timezone
 
 
-class CustomUser(AbstractUser):
+class CustomUser(AbstractBaseUser):
     first_name = models.CharField(max_length=64, 
                                   default='Имя')
     last_name = models.CharField(max_length=64, 
@@ -19,6 +19,8 @@ class CustomUser(AbstractUser):
                               unique=True, 
                               default='example@mail.ru', 
                               null=False)
+    
+    USERNAME_FIELD = 'email'
 
     
 class PerevalAdded(models.Model):
