@@ -6,6 +6,7 @@ from drf_spectacular.utils import extend_schema, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
 
 from django.http import JsonResponse
+from django.core.exceptions import ValidationError
 
 from .models import PerevalAdded
 from .serializers import PerevalSerializer
@@ -44,10 +45,12 @@ class submitData(views.APIView):
             ]
     )
     def post(self, request):
-        name = request.data.get('user_info')
-        last_name, first_name, patronymic = name.split(" ")
         data = request.data
-        data.pop('user_info')
+        name = data.pop('user_info')
+        last_name, first_name, patronymic = name.split(" ")
+        height = request.data.pop('height')
+        latitude = request.data.pop('latitude')
+        longitude = request.data.pop('longitude')
         user = {
             "email": request.data.get('email'),
             "last_name": last_name,
@@ -55,9 +58,6 @@ class submitData(views.APIView):
             "patronymic": patronymic,
             "phone": request.data.get('phone'),
         }
-        height = request.data.pop('height')
-        latitude = request.data.pop('latitude')
-        longitude = request.data.pop('longitude')
         coords = {
             'height': height,
             "latitude": latitude,
@@ -68,11 +68,9 @@ class submitData(views.APIView):
         data['coords'] = coords
         data['user'] = user
         serializer = PerevalSerializer(data=data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             print(serializer.errors)
             serializer.save()
             return JsonResponse(serializer.data, status=200)
         print(serializer.errors)
         return Response(serializer.data)
-
-
