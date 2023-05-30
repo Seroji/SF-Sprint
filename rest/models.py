@@ -58,20 +58,16 @@ class Coords(models.Model):
     latitude = models.FloatField(null=False)
 
 
-LEVEL_CHOICES = [
-    ''
-]
-
-
 class Level(models.Model):
     winter = models.CharField(max_length=2, default="", blank=False)
     spring = models.CharField(max_length=2, default="", blank=False)
     summer = models.CharField(max_length=2, default="", blank=False)
     autumn = models.CharField(max_length=2, default="", blank=False)
 
+
 class Image(models.Model):
     title = models.CharField(max_length=64)
-    image = models.BinaryField(editable=True, null=False)
+    image = models.ImageField(null=False)
 
 
 class PerevalImage(models.Model):

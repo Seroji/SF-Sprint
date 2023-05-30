@@ -46,7 +46,7 @@ class submitData(views.APIView):
                             },
                         "images": [
                             {"image":"<картинка1>", "title":"Седловина"}, 
-                            {"image":"<картинка>", "title":"Подъём"}
+                            {"image":"<картинка2>", "title":"Подъём"}
                             ]
                     }
                 )
