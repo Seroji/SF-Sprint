@@ -1,4 +1,4 @@
-from rest_framework import views
+from rest_framework import views, status
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 
@@ -8,7 +8,7 @@ from drf_spectacular.types import OpenApiTypes
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 
-from .models import PerevalAdded
+from .models import PerevalAdded, Coords
 from .serializers import PerevalSerializer
 from .exceptions import DBWriteError
 
@@ -58,5 +58,13 @@ class submitData(views.APIView):
         serializer = PerevalSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response()
+            obj_id = self.get_object(data=data)
+            return Response({"status": status.HTTP_200_OK, "message": "null", "id": f"{obj_id}"}, status=status.HTTP_200_OK)
         raise DBWriteError({"message": "Ошибка записи в базу данных"})
+
+    def get_object(self, data):
+        coords = data.pop('coords')
+        obj_coords = Coords.objects.get(**coords)
+        obj = PerevalAdded.objects.get(coords=obj_coords)
+        return obj.id
+    
