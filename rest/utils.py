@@ -1,8 +1,14 @@
-from rest_framework.views import exception_handler
+from drf_standardized_errors.formatter import ExceptionFormatter
+from drf_standardized_errors.types import ErrorResponse
+
+from rest_framework import status
 
 
-def custom_exception_handler(exc, content):
-    response = exception_handler(exc, content)
-    if response is not None:
-        response.data['status'] = response.status_code
-    return response
+class CustomExceptionFormatter(ExceptionFormatter):
+    def format_error_response(self, error_response: ErrorResponse):
+        error = error_response.errors[0]
+        return {
+            "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
+            "field_name": error.attr,
+            "message": error.detail,
+        }

@@ -10,6 +10,7 @@ from django.core.exceptions import ValidationError
 
 from .models import PerevalAdded
 from .serializers import PerevalSerializer
+from .exceptions import DBWriteError
 
 
 class submitData(views.APIView):
@@ -54,32 +55,8 @@ class submitData(views.APIView):
     )
     def post(self, request):
         data = request.data
-        # name = data.pop('user_info')
-        # lst = name.split(' ')
-        # if len(lst) < 3:
-        #     return Response({'status': 500, 'message': 'Поле ФИО некорректно'})
-        # last_name, first_name, patronymic = lst
-        # height = request.data.pop('height')
-        # latitude = request.data.pop('latitude')
-        # longitude = request.data.pop('longitude')
-        # user = {
-        #     "email": request.data.get('email'),
-        #     "last_name": last_name,
-        #     "first_name": first_name,
-        #     "patronymic": patronymic,
-        #     "phone": request.data.get('phone'),
-        # }
-        # coords = {
-        #     'height': height,
-        #     "latitude": latitude,
-        #     "longitude": longitude,
-        #     "email": request.data.pop('email'),
-        #     "phone": request.data.pop('phone'),
-        # }
-        # data['coords'] = coords
-        # data['user'] = user
         serializer = PerevalSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return JsonResponse(serializer.data, status=200)
-        return Response(serializer.data)
+            return Response()
+        raise DBWriteError({"message": "Ошибка записи в базу данных"})

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework.fields import CurrentUserDefault
+from rest_framework.exceptions import ValidationError
 
 from phonenumber_field.serializerfields import PhoneNumberField
 
@@ -102,11 +103,15 @@ class PerevalSerializer(serializers.ModelSerializer):
         if not CustomUser.objects.filter(email=user.get('email')).exists():
             user_instance = CustomUser.objects.create(**user)
             user_instance.save()
+        else:
+            user_instance = CustomUser.objects.get(email=user.get('email'))
 
         coords = validated_data.pop('coords')
         if not Coords.objects.filter(**coords).exists():
             coords_instance = Coords.objects.create(**coords)
             coords_instance.save()
+        else:
+            raise ValidationError({"message": 'Такой объект уже существует'})
 
         images = []
         for image in validated_data.pop('images'):
