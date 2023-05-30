@@ -28,10 +28,10 @@ class submitData(views.APIView):
                         "add_time": "2021-09-22 13:18:13",
                         "user": {
                             "email": "qwerty@mail.ru", 		
-                            "fam": "Пупкин",
-                            "name": "Василий",
-                            "otc": "Иванович",
-                            "phone": "+7 555 55 55"
+                            "last_name": "Пупкин",
+                            "first_name": "Василий",
+                            "patronymic": "Иванович",
+                            "phone": "+7 953 212 64 78"
                             },
                         "coords":{
                             "latitude": "45.3842",
@@ -54,30 +54,30 @@ class submitData(views.APIView):
     )
     def post(self, request):
         data = request.data
-        name = data.pop('user_info')
-        lst = name.split(' ')
-        if len(lst) < 3:
-            return Response({'status': 500, 'message': 'Поле ФИО некорректно'})
-        last_name, first_name, patronymic = lst
-        height = request.data.pop('height')
-        latitude = request.data.pop('latitude')
-        longitude = request.data.pop('longitude')
-        user = {
-            "email": request.data.get('email'),
-            "last_name": last_name,
-            "first_name": first_name,
-            "patronymic": patronymic,
-            "phone": request.data.get('phone'),
-        }
-        coords = {
-            'height': height,
-            "latitude": latitude,
-            "longitude": longitude,
-            "email": request.data.pop('email'),
-            "phone": request.data.pop('phone'),
-        }
-        data['coords'] = coords
-        data['user'] = user
+        # name = data.pop('user_info')
+        # lst = name.split(' ')
+        # if len(lst) < 3:
+        #     return Response({'status': 500, 'message': 'Поле ФИО некорректно'})
+        # last_name, first_name, patronymic = lst
+        # height = request.data.pop('height')
+        # latitude = request.data.pop('latitude')
+        # longitude = request.data.pop('longitude')
+        # user = {
+        #     "email": request.data.get('email'),
+        #     "last_name": last_name,
+        #     "first_name": first_name,
+        #     "patronymic": patronymic,
+        #     "phone": request.data.get('phone'),
+        # }
+        # coords = {
+        #     'height': height,
+        #     "latitude": latitude,
+        #     "longitude": longitude,
+        #     "email": request.data.pop('email'),
+        #     "phone": request.data.pop('phone'),
+        # }
+        # data['coords'] = coords
+        # data['user'] = user
         serializer = PerevalSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
