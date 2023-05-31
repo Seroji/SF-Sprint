@@ -20,6 +20,7 @@ class submitData(mixins.CreateModelMixin,
                    viewsets.GenericViewSet):
     queryset = PerevalAdded.objects.all()
     serializer_class = PerevalSerializer
+    http_method_names = ['get', 'post', 'patch']
 
     @extend_schema(
             request=PerevalSerializer,
@@ -27,7 +28,7 @@ class submitData(mixins.CreateModelMixin,
             examples=[
                 OpenApiExample(
                 'Post example',
-                    value=
+                value=
                     {
                         "beauty_title": "пер. ",
                         "title": "Пхия",
@@ -74,7 +75,10 @@ class submitData(mixins.CreateModelMixin,
         obj_coords = Coords.objects.get(**coords)
         obj = PerevalAdded.objects.get(coords=obj_coords)
         return obj.id
-
+    
+    @extend_schema(
+            responses=PerevalSerializer,
+    )
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
@@ -82,3 +86,5 @@ class submitData(mixins.CreateModelMixin,
         data = serializer.data
         data['status'] = Status.objects.get(id=status_id).title
         return Response(data)
+    
+    
