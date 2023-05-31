@@ -9,7 +9,7 @@ from drf_spectacular.types import OpenApiTypes
 from django.http import JsonResponse
 from django.core.exceptions import ValidationError
 
-from .models import PerevalAdded, Coords
+from .models import PerevalAdded, Coords, Status
 from .serializers import PerevalSerializer
 from .exceptions import DBWriteError
 
@@ -65,12 +65,20 @@ class submitData(mixins.CreateModelMixin,
         serializer = PerevalSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            obj_id = self.get_object(data=data)
+            obj_id = self.get_new_id(data=data)
             return Response({"status": status.HTTP_200_OK, "message": "null", "id": f"{obj_id}"}, status=status.HTTP_200_OK)
         raise DBWriteError({"message": "Ошибка записи в базу данных"})
     
-    def get_object(self, data):
+    def get_new_id(self, data):
         coords = data.pop('coords')
         obj_coords = Coords.objects.get(**coords)
         obj = PerevalAdded.objects.get(coords=obj_coords)
         return obj.id
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        status_id = instance.status_id
+        data = serializer.data
+        data['status'] = Status.objects.get(id=status_id).title
+        return Response(data)
