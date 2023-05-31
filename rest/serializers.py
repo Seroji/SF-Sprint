@@ -10,7 +10,6 @@ from .models import (Coords,
                      PerevalAdded,
                      CustomUser,
                      PerevalImage)
-from .exceptions import ChangeReject
 
 
 class CoordsSerializer(serializers.ModelSerializer):
@@ -138,4 +137,18 @@ class PerevalSerializer(serializers.ModelSerializer):
 
 
     def update(self, instance, validated_data):
-        pass
+        instance.beauty_titile = validated_data.pop('beauty_title')
+        instance.title = validated_data.pop('title')
+        instance.other_titles = validated_data.pop('other_titles')
+        instance.connect = validated_data.pop('connect')
+        instance.add_time = validated_data.pop('add_time')
+        
+        Coords.objects.filter(id=instance.coords_id).update(**validated_data.pop('coords'))
+        Level.objects.filter(id=instance.level_id).update(**validated_data.pop('level'))
+
+        instance.images.clear()
+        for image in validated_data.pop('images'):
+            instance.images.create(**image)
+
+        return instance
+        

@@ -5,10 +5,4 @@ class DBWriteError(APIException):
     status_code = 500
     default_detail = 'database_error'
     default_code = 'database_unavailable'
-
-
-class ChangeReject(APIException):
-    status_code = 400
-    default_detail = 'database_error'
-    default_code = 'database_unavailable'
     
