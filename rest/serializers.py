@@ -44,7 +44,7 @@ class LevelSerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.ModelSerializer):
     title = serializers.CharField(max_length=64, required=True)
-    image = serializers.ImageField(required=True) #Изменить тип поля сериализатора
+    image = serializers.CharField(required=True) #Изменить тип поля сериализатора
 
     class Meta:
         model = Image

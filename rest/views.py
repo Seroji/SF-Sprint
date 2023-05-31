@@ -1,6 +1,7 @@
-from rest_framework import views, status
+from rest_framework import views, status, viewsets, mixins
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
+from rest_framework.decorators import action
 
 from drf_spectacular.utils import extend_schema, OpenApiExample
 from drf_spectacular.types import OpenApiTypes
@@ -13,7 +14,13 @@ from .serializers import PerevalSerializer
 from .exceptions import DBWriteError
 
 
-class submitData(views.APIView):
+class submitData(mixins.CreateModelMixin,
+                   mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
+                   viewsets.GenericViewSet):
+    queryset = PerevalAdded.objects.all()
+    serializer_class = PerevalSerializer
+
     @extend_schema(
             request=PerevalSerializer,
             responses=PerevalSerializer,
@@ -53,7 +60,7 @@ class submitData(views.APIView):
                 )
             ]
     )
-    def post(self, request):
+    def create(self, request, *args, **kwargs):
         data = request.data
         serializer = PerevalSerializer(data=data)
         if serializer.is_valid(raise_exception=True):
@@ -61,10 +68,9 @@ class submitData(views.APIView):
             obj_id = self.get_object(data=data)
             return Response({"status": status.HTTP_200_OK, "message": "null", "id": f"{obj_id}"}, status=status.HTTP_200_OK)
         raise DBWriteError({"message": "Ошибка записи в базу данных"})
-
+    
     def get_object(self, data):
         coords = data.pop('coords')
         obj_coords = Coords.objects.get(**coords)
         obj = PerevalAdded.objects.get(coords=obj_coords)
         return obj.id
-    
