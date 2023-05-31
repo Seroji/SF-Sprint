@@ -131,13 +131,13 @@ class PerevalSerializer(serializers.ModelSerializer):
         )
         pereval.save()
 
-        for image in images:
-            PerevalImage.objects.create(pereval_id=pereval.id, image_id=image.id)
+        pereval.images.set(images)
+
         return pereval
 
 
     def update(self, instance, validated_data):
-        instance.beauty_titile = validated_data.pop('beauty_title')
+        instance.beauty_title = validated_data.pop('beauty_title')
         instance.title = validated_data.pop('title')
         instance.other_titles = validated_data.pop('other_titles')
         instance.connect = validated_data.pop('connect')
@@ -149,6 +149,8 @@ class PerevalSerializer(serializers.ModelSerializer):
         instance.images.clear()
         for image in validated_data.pop('images'):
             instance.images.create(**image)
+
+        instance.save()
 
         return instance
         

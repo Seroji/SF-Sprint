@@ -62,15 +62,15 @@ class submitData(mixins.CreateModelMixin,
             ]
     )
     def create(self, request, *args, **kwargs):
-        # data = request.data
-        # serializer = PerevalSerializer(data=data)
-        # if serializer.is_valid(raise_exception=True):
-        #     serializer.save()
-        #     obj_id = self.get_new_id(data=data)
-        #     return Response({"status": status.HTTP_200_OK, "message": "null", "id": f"{obj_id}"}, status=status.HTTP_200_OK)
+        data = request.data
+        serializer = PerevalSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            obj_id = self.get_id(data=data)
+            return Response({"status": status.HTTP_200_OK, "message": "null", "id": f"{obj_id}"}, status=status.HTTP_200_OK)
         raise DBWriteError({"message": "Ошибка записи в базу данных"})
     
-    def get_new_id(self, data):
+    def get_id(self, data):
         coords = data.pop('coords')
         obj_coords = Coords.objects.get(**coords)
         obj = PerevalAdded.objects.get(coords=obj_coords)
@@ -100,5 +100,5 @@ class submitData(mixins.CreateModelMixin,
         if getattr(instance, '_prefetched_objects_cache', None):
             instance._prefetched_objects_cache = {}
 
-        return Response(serializer.data)
+        return Response({"state": 1, "message": "null"})
     
