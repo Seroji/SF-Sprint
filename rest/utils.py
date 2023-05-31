@@ -9,6 +9,5 @@ class CustomExceptionFormatter(ExceptionFormatter):
         error = error_response.errors[0]
         return {
             "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
-            "field_name": error.attr,
             "message": error.detail,
         }

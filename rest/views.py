@@ -62,12 +62,12 @@ class submitData(mixins.CreateModelMixin,
             ]
     )
     def create(self, request, *args, **kwargs):
-        data = request.data
-        serializer = PerevalSerializer(data=data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            obj_id = self.get_new_id(data=data)
-            return Response({"status": status.HTTP_200_OK, "message": "null", "id": f"{obj_id}"}, status=status.HTTP_200_OK)
+        # data = request.data
+        # serializer = PerevalSerializer(data=data)
+        # if serializer.is_valid(raise_exception=True):
+        #     serializer.save()
+        #     obj_id = self.get_new_id(data=data)
+        #     return Response({"status": status.HTTP_200_OK, "message": "null", "id": f"{obj_id}"}, status=status.HTTP_200_OK)
         raise DBWriteError({"message": "Ошибка записи в базу данных"})
     
     def get_new_id(self, data):
@@ -87,4 +87,18 @@ class submitData(mixins.CreateModelMixin,
         data['status'] = Status.objects.get(id=status_id).title
         return Response(data)
     
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        
+        if instance.status_id != 1:
+            return Response({"state": 0, "message": "Статус объекта не позволяет осуществлять редактирование"})
+
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        obj = self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
     

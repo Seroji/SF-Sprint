@@ -10,6 +10,7 @@ from .models import (Coords,
                      PerevalAdded,
                      CustomUser,
                      PerevalImage)
+from .exceptions import ChangeReject
 
 
 class CoordsSerializer(serializers.ModelSerializer):
@@ -134,3 +135,7 @@ class PerevalSerializer(serializers.ModelSerializer):
         for image in images:
             PerevalImage.objects.create(pereval_id=pereval.id, image_id=image.id)
         return pereval
+
+
+    def update(self, instance, validated_data):
+        pass
