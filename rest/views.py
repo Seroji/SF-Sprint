@@ -59,7 +59,15 @@ class submitData(mixins.CreateModelMixin,
                             ]
                     }
                 )
-            ]
+            ],
+            summary="Add information about new PEREVAL via POST request.",
+            description=
+            """
+            Add informamation about new PEREVAL via POST request. It requires JSON request like in the example below.
+            Pay your attention to the format of all the fields. If coords already exist in the database, it will cause error.
+            If user is already in the database, new user won't be added in the database, however information about new PEREVAL will be added
+            and connected with the existing user.
+            """
     )
     def create(self, request, *args, **kwargs):
         data = request.data
@@ -78,6 +86,12 @@ class submitData(mixins.CreateModelMixin,
     
     @extend_schema(
             responses=PerevalSerializer,
+            summary="Get PEREVAL but its id.",
+            description=
+            """
+            You need to pass value of the id of PERAVAL via URL. The type of id is integer. 
+            EXAMPLE: .../submitData/1/ 
+            """
     )
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -87,6 +101,18 @@ class submitData(mixins.CreateModelMixin,
         data['status'] = Status.objects.get(id=status_id).title
         return Response(data)
     
+    @extend_schema(
+            summary='Make partial update of an information about the PEREVAL',
+            description=
+            """
+            You need to pass JSON request like in the example below. You can't edit any information about the user,
+            the programm will skip that. However variance of another data is possible.
+            """
+    )
+    def partial_update(self, request, *args, **kwargs):
+            kwargs['partial'] = True
+            return self.update(request, *args, **kwargs)
+
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         
@@ -114,7 +140,14 @@ class submitData(mixins.CreateModelMixin,
             responses=PerevalSerializer,
             parameters=[
                 OpenApiParameter(name='user_email', location=OpenApiParameter.QUERY),
-            ]
+            ],
+            summary="Get LIST of PEREVALs",
+            description=
+            """
+            Without any query params it will return to you information about all the PEREVALs in the database.
+            However if you pass user_email query param, you'll get all PEREVALs which is connected with the user with 
+            this email.
+            """
     )
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
