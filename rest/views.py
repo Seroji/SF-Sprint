@@ -169,7 +169,7 @@ class submitData(mixins.CreateModelMixin,
             parameters=[
                 OpenApiParameter(name='user_email', location=OpenApiParameter.QUERY),
             ],
-            summary="Get LIST of PEREVALs",
+            summary="Get LIST of PEREVALs.",
             description=
             """
             Without any query params it will return to you information about all the PEREVALs in the database.
