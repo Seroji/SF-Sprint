@@ -5,7 +5,7 @@ from .views import submitData
 from rest_framework import routers
 
 router = routers.SimpleRouter()
-router.register(r'submitData', submitData)
+router.register(r'submitData', submitData, basename='PerevalAdded')
 
 
 urlpatterns = [

@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import action
 
-from drf_spectacular.utils import extend_schema, OpenApiExample
+from drf_spectacular.utils import extend_schema, OpenApiExample, OpenApiParameter, extend_schema_view
 from drf_spectacular.types import OpenApiTypes
 
 from django.http import JsonResponse
@@ -17,8 +17,8 @@ from .exceptions import DBWriteError
 class submitData(mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,
                    mixins.UpdateModelMixin,
-                   viewsets.GenericViewSet):
-    queryset = PerevalAdded.objects.all()
+                   viewsets.GenericViewSet,
+                   mixins.ListModelMixin):
     serializer_class = PerevalSerializer
     http_method_names = ['get', 'post', 'patch']
 
@@ -102,3 +102,27 @@ class submitData(mixins.CreateModelMixin,
 
         return Response({"state": 1, "message": "null"})
     
+    def get_queryset(self):
+        queryset = PerevalAdded.objects.all()
+        email = self.request.query_params.get('user_email')
+        if email:
+            queryset = queryset.filter(user__email=email)
+        return queryset
+    
+    @extend_schema(
+            request=PerevalSerializer,
+            responses=PerevalSerializer,
+            parameters=[
+                OpenApiParameter(name='user_email', location=OpenApiParameter.QUERY),
+            ]
+    )
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
