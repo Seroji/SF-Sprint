@@ -44,7 +44,7 @@ class LevelSerializer(serializers.ModelSerializer):
 
 class ImageSerializer(serializers.ModelSerializer):
     title = serializers.CharField(max_length=64, required=True)
-    image = serializers.ImageField(required=True) #Изменить тип поля сериализатора
+    image = serializers.CharField(required=True) #Изменить тип поля сериализатора
 
     class Meta:
         model = Image
@@ -131,6 +131,26 @@ class PerevalSerializer(serializers.ModelSerializer):
         )
         pereval.save()
 
-        for image in images:
-            PerevalImage.objects.create(pereval_id=pereval.id, image_id=image.id)
+        pereval.images.set(images)
+
         return pereval
+
+
+    def update(self, instance, validated_data):
+        instance.beauty_title = validated_data.pop('beauty_title')
+        instance.title = validated_data.pop('title')
+        instance.other_titles = validated_data.pop('other_titles')
+        instance.connect = validated_data.pop('connect')
+        instance.add_time = validated_data.pop('add_time')
+        
+        Coords.objects.filter(id=instance.coords_id).update(**validated_data.pop('coords'))
+        Level.objects.filter(id=instance.level_id).update(**validated_data.pop('level'))
+
+        instance.images.clear()
+        for image in validated_data.pop('images'):
+            instance.images.create(**image)
+
+        instance.save()
+
+        return instance
+        
