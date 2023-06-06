@@ -16,7 +16,7 @@ __Schema documetation__ can be get by typing `http://127.0.0.1:8000/api/schema/`
 Alse you can just view __Schema__ by typing `http://127.0.0.1:8000/api/docs/`.
 ___
 <a id='installation'></a>
-###Installation
+### Installation
 PostgreSQL is used as a base database, but anyway you can use all databases which Django supports. 
 All environmental variables are kept in the __.env__ file right in the directory.
 >In this way first of all create __.env__ in the directory with the following variables:
@@ -33,7 +33,7 @@ Then, configure `setting.py` in the `fstr_rest` directory according to your sett
 After all this operation you can type `python manage.py runserver` for checking if everything is correct.
 ___
 <a id='GET_method'></a>
-###GET method
+### GET method
 >__Attention__: all examples below are presented for `localhost` server. That's why for your server these can be different.
 
 __GET method__ works in two ways.
@@ -84,7 +84,7 @@ After it you will get all information about `height` like in firt example but fo
 >__Attention__: there is a concealed field `status` for every `height`. It has 4 possible values that can be changed only by moderators: `new`, `pending`, `accepted` and `rejected`.
 ___
 <a id="POST_method"></a>
-###POST method
+### POST method
 Working with __POST method__ is quite easy. You need pass the data in JSON format to the `http://127.0.0.1:8000/submitData/` URL like in the example below:
 ```python
 [
@@ -157,7 +157,7 @@ After creation every `height` get `status` field with the value `new`. The respo
 However, if there are any proble with database connection it will return `{"message": "Ошибка записи в базу данных"}`.
 ___
 <a id='PATCH_method'></a>
-###PATCH method
+### PATCH method
 This is similar to the __POST method__ but you need to pass `id` of the `height` you want to change.
 >__Attention__: you can change values of all fields except for `user`. This information is restricted for changing and will be skipped.
 
