@@ -164,4 +164,4 @@ This is similar to the __POST method__ but you need to pass `id` of the `height`
 If `status` field of changing `height` has value `new`, it will be changed. However, if it has any other value, it can't be changed. In this way it will return `{"state": 0, "message": "Статус объекта не позволяет осуществлять редактирование"}`.
 If everything is correct, it will return `{"state": 1, "message": "null"}`.
 ___
-For more inforamtion you connect with me on the GitHub.
+For more information you can connect with me on the GitHub.
