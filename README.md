@@ -8,7 +8,7 @@
 5. [PATCH method](#PATCH_method)
 ---
 <a id='about'></a>
-###About
+### About
 FSTR API is a small API for working with databases with specific structure which is required in FSTR.
 Speaking about the version which is loaded on the GitHub, it bases on the __Django 4.2.1__, __Django Rest Framework 3.14.0__. 
 __DRF Spectacular 0.26.2__ is used for automatical generation of the documentation.
