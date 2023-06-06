@@ -1,6 +1,6 @@
 ## Federation of Sports Tourism of Russia API (FSTR API)
 ---
-###Content
+### Content
 1. [About](#about)
 2. [Configuration](#installation)
 3. [GET method](#GET_method)
